@@ -1,6 +1,31 @@
-import { CircleNotch } from "phosphor-react";
+import { useForm } from 'react-hook-form';
+import toast, { Toaster } from 'react-hot-toast';
+
+import { api } from '../services/api';
+
+type RegisterData = {
+  email: string;
+  password: string;
+};
 
 export default function Home() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm();
+
+  const onSubmit = async (data: RegisterData) => {
+    try {
+      await api.post<RegisterData>('/login', data);
+
+      toast.success('Login efetuado com sucesso!');
+    } catch {
+      toast.error('Error ao efetuar o login!');
+    }
+  };
+
   return (
     <div className="h-screen flex bg-neutral flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-32 lg:w-48">
@@ -28,7 +53,11 @@ export default function Home() {
         </svg>
       </div>
 
-      <form className="mt-8 space-y-6 max-w-sm w-full" action="#" method="POST">
+      <form
+        className="mt-8 space-y-6 max-w-sm w-full"
+        onSubmit={handleSubmit(onSubmit)}
+        method="POST"
+      >
         <input type="hidden" name="remember" defaultValue="true" />
         <div className="rounded-md shadow-sm -space-y-px">
           <div>
@@ -43,6 +72,7 @@ export default function Home() {
               required
               className="appearance-none rounded-none bg-neutral relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
               placeholder="Email address"
+              {...register('email', { required: true })}
             />
           </div>
           <div>
@@ -54,9 +84,9 @@ export default function Home() {
               name="password"
               type="password"
               autoComplete="current-password"
-              required
               className="appearance-none rounded-none bg-neutral relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:primary focus:border-primary focus:z-10 sm:text-sm"
               placeholder="Password"
+              {...register('password', { required: true })}
             />
           </div>
         </div>
@@ -78,10 +108,7 @@ export default function Home() {
           </div>
 
           <div className="text-sm">
-            <a
-              href="#"
-              className="font-medium text-primary hover:opacity-95"
-            >
+            <a href="#" className="font-medium text-primary hover:opacity-95">
               Forgot your password?
             </a>
           </div>
@@ -91,13 +118,15 @@ export default function Home() {
           <button
             type="submit"
             className="disabled:bg-primaryDark disabled:cursor-not-allowed group relative w-full flex justify-center py-2 px-4 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            disabled
+            // disabled
           >
-            <CircleNotch className="animate-spin" size={18} weight="bold" color="white" />
-            {/* Sign in */}
+            {/* <CircleNotch className="animate-spin" size={18} weight="bold" color="white" /> */}
+            Sign in
           </button>
         </div>
       </form>
+
+      <Toaster />
     </div>
   );
 }
