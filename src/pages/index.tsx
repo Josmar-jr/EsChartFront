@@ -1,30 +1,35 @@
 import { useForm } from 'react-hook-form';
-import toast, { Toaster } from 'react-hot-toast';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { object, string } from 'yup';
 
-import { api } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
+import { Input } from '../components/Form/Input';
 
-type RegisterData = {
-  email: string;
-  password: string;
-};
+const lowercaseRegex = /(?=.*[a-z])/;
+const uppercaseRegex = /(?=.*[A-Z])/;
+const numericRegex = /(?=.*[0-9])/;
+
+const schema = object({
+  email: string().email().required(),
+  password: string()
+    .matches(lowercaseRegex, 'One lowercase require')
+    .matches(uppercaseRegex, 'One uppercase required!')
+    .matches(numericRegex, 'One numeric required!')
+    .min(8, 'Minimum 8 characters required!')
+    .required('required')
+}).required();
 
 export default function Home() {
+  const { signIn } = useAuth();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors }
-  } = useForm();
-
-  const onSubmit = async (data: RegisterData) => {
-    try {
-      await api.post<RegisterData>('/login', data);
-
-      toast.success('Login efetuado com sucesso!');
-    } catch {
-      toast.error('Error ao efetuar o login!');
-    }
-  };
+  } = useForm({
+    resolver: yupResolver(schema)
+  });
 
   return (
     <div className="h-screen flex bg-neutral flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -55,38 +60,28 @@ export default function Home() {
 
       <form
         className="mt-8 space-y-6 max-w-sm w-full"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(signIn)}
         method="POST"
       >
         <input type="hidden" name="remember" defaultValue="true" />
-        <div className="rounded-md shadow-sm -space-y-px">
+        <div className="rounded-md shadow-sm -space-y-px flex flex-col">
           <div>
-            <label htmlFor="email-address" className="sr-only">
-              Email address
-            </label>
-            <input
-              id="email-address"
+            <Input
               name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="appearance-none rounded-none bg-neutral relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
-              placeholder="Email address"
-              {...register('email', { required: true })}
+              error={errors.email}
+              placeholder="Email"
+              customClass="rounded-t-lg"
+              {...register('email')}
             />
           </div>
           <div>
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-            <input
-              id="password"
+            <Input
               name="password"
+              error={errors.password}
               type="password"
-              autoComplete="current-password"
-              className="appearance-none rounded-none bg-neutral relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:primary focus:border-primary focus:z-10 sm:text-sm"
               placeholder="Password"
-              {...register('password', { required: true })}
+              customClass="rounded-b-lg"
+              {...register('password')}
             />
           </div>
         </div>
@@ -125,8 +120,6 @@ export default function Home() {
           </button>
         </div>
       </form>
-
-      <Toaster />
     </div>
   );
 }

@@ -1,41 +1,19 @@
 import '../styles/globals.css';
-import { createServer, Model, Response } from 'miragejs';
 
-createServer({
-  models: {
-    users: Model
-  },
+import { makeServer } from '../services/mirage';
 
-  seeds(server) {
-    server.db.loadData({
-      users: [
-        {
-          email: 'john.doe@test.com',
-          password: 'Bob_esponja123'
-        }
-      ]
-    });
-  },
+import { AuthProvider } from '../contexts/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
-  routes() {
-    this.namespace = 'fake';
-
-    this.post('/login', (schema, request) => {
-      const { email, password } = JSON.parse(request.requestBody);
-      const userAlreadyExist = schema.db.users.findBy({ email, password });
-
-      if (!userAlreadyExist) return new Response(401);
-
-      return new Response(
-        201,
-        { 'x-token': 'Berear adf212d2f12a1dsf1adb_asmBJm.dfjklm' },
-      );
-    });
-  }
-});
+makeServer()
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <AuthProvider>
+      <Toaster />
+      <Component {...pageProps} />
+    </AuthProvider>
+  );
 }
 
 export default MyApp;
