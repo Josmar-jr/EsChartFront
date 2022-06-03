@@ -4,6 +4,7 @@ import { object, string } from 'yup';
 
 import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/Form/Input';
+import { CircleNotch } from 'phosphor-react';
 
 const lowercaseRegex = /(?=.*[a-z])/;
 const uppercaseRegex = /(?=.*[A-Z])/;
@@ -25,8 +26,7 @@ export default function Home() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors }
+    formState: { errors, isSubmitting }
   } = useForm({
     resolver: yupResolver(schema)
   });
@@ -113,10 +113,18 @@ export default function Home() {
           <button
             type="submit"
             className="disabled:bg-primaryDark disabled:cursor-not-allowed group relative w-full flex justify-center py-2 px-4 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-            // disabled
+            disabled={isSubmitting}
           >
-            {/* <CircleNotch className="animate-spin" size={18} weight="bold" color="white" /> */}
-            Sign in
+            {isSubmitting ? (
+              <CircleNotch
+                className="animate-spin"
+                size={18}
+                weight="bold"
+                color="white"
+              />
+            ) : (
+              'Sign in'
+            )}
           </button>
         </div>
       </form>

@@ -6,7 +6,7 @@ import {
   useState
 } from 'react';
 import Router from 'next/router';
-import { setCookie, parseCookies } from 'nookies';
+import { setCookie, parseCookies, destroyCookie } from 'nookies';
 
 import toast from 'react-hot-toast';
 import { api } from '../services/api';
@@ -34,6 +34,13 @@ interface AuthProviderProps {
 
 const AuthContext = createContext({} as AuthContextData);
 
+export function signOut() {
+  destroyCookie(undefined, 'eschart.token');
+  destroyCookie(undefined, 'eschart.refreshToken');
+
+  Router.push('/');
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
@@ -42,11 +49,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { 'eschart.token': token } = parseCookies();
 
     if (token) {
-      api.get('/me').then(response => {
-        const { email, roles, permissions } = response.data;
+      api
+        .get('/me')
+        .then(response => {
+          const { email, roles, permissions } = response.data;
 
-        setUser({ email, roles, permissions });
-      });
+          setUser({ email, roles, permissions });
+        })
+        .catch(error => {
+          console.error(`Router '/me' with error ${error}`);
+          signOut();
+        });
     }
   }, []);
 
@@ -77,7 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       toast.success('Login efetuado com sucesso!');
-      // Router.push('/dashboard');
+      Router.push('/dashboard');
     } catch {
       toast.error('Email ou senha incorreto!', {
         style: {

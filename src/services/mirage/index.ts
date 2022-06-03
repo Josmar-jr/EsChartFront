@@ -1,4 +1,10 @@
-import { createServer, Model, Response } from 'miragejs';
+import {
+  createServer,
+  Factory,
+  Model,
+  Response,
+  ActiveModelSerializer
+} from 'miragejs';
 
 type User = {
   name: string;
@@ -8,10 +14,18 @@ type User = {
   roles: string[];
 };
 
-export function makeServer() {
+let mockToken = 'akBVskl_Jfdk.asdjh_aslv-asldfjasmv.jKMhbL.asdf';
+
+export function makeServer({ environment = 'test' } = {}) {
   const server = createServer({
+    environment,
+
+    serializers: {
+      application: ActiveModelSerializer
+    },
+
     models: {
-      users: Model
+      users: Model.extend<Partial<User>>({})
     },
 
     seeds(server) {
@@ -29,11 +43,15 @@ export function makeServer() {
     },
 
     routes() {
-      this.namespace = 'fake';
-      this.timing = 750;
+      this.namespace = 'api';
+      this.timing = 1250;
 
       this.get('/me', (schema, request) => {
         const { name, email, roles, permissions } = schema.db.users[0];
+        const { Authorization } = request.requestHeaders;
+        const [, token] = Authorization.split(' ');
+
+        if (token !== mockToken) return new Response(401);
 
         return {
           name,
@@ -55,11 +73,14 @@ export function makeServer() {
           {
             permissions: user.permissions,
             roles: user.roles,
-            token: 'adf212d2f12a1dsf1adb_asmBJm.dfjklm',
+            token: mockToken,
             refreshToken: 'lhnln_dn.adfa2sdfa3hspvnb.12511asdf'
           }
         );
       });
+
+      this.namespace = '';
+      this.passthrough();
     }
   });
 

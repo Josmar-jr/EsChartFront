@@ -5,7 +5,9 @@ import { makeServer } from '../services/mirage';
 import { AuthProvider } from '../contexts/AuthContext';
 import { Toaster } from 'react-hot-toast';
 
-makeServer()
+if (process.env.NODE_ENV === 'development') {
+  makeServer({ environment: 'development' });
+}
 
 function MyApp({ Component, pageProps }) {
   return (
