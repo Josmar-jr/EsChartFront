@@ -35,8 +35,8 @@ export function makeServer({ environment = 'test' } = {}) {
             name: 'John Doe',
             email: 'john.doe@test.com',
             password: '@Abc1234',
-            permissions: ['Administration'],
-            roles: ['user.create', 'user.edit']
+            permissions: ['user.create', 'user.edit', 'metrics.list'],
+            roles: ['Administration']
           }
         ]
       });
