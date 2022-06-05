@@ -1,24 +1,30 @@
 import { useAuth } from '../contexts/AuthContext';
 import { Sidebar } from '../components/Sidebar';
-import { withSSRAuth } from '../utils/withSSRAuth';
-import { Can } from '../components/Can';
+
+import { CircleNotch } from 'phosphor-react';
 
 export default function Dashboard() {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   if (!user) {
-    return <div>Loading</div>
+    return (
+      <div className="flex items-center justify-center h-screen w-screen">
+        <CircleNotch
+          className="animate-spin text-primary"
+          size={32}
+          weight="bold"
+        />
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="flex">
       <Sidebar />
-      <h1>{user?.email}</h1>
-      <Can permissions={['metrics.list']}>
-        <div>Métricas</div>
-      </Can>
-      <button onClick={() => signOut()}>SignOut</button>
-    </>
+      <main>
+        <h1>Dashboard</h1>
+      </main>
+    </div>
   );
 }
 
