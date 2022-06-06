@@ -16,21 +16,23 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   return (
     <label
       htmlFor={name}
+      data-testid="label-wrapper"
       className="flex self-center items-center relative flex-1 bg-neutral"
     >
       <input
         id={name}
         name={name}
+        aria-label={name}
         className={`${customClass} appearance-none rounded-none w-full px-3 py-2 bg-neutral ${
           !!error
             ? 'border-red-600 focus:border-red-700'
             : 'border-gray-300 focus:border-primary'
-        } border  placeholder-gray-500 text-gray-900 focus:z-10 focus:outline-none   sm:text-sm`}
+        } border placeholder-gray-500 text-gray-900 focus:z-10 focus:outline-none sm:text-sm`}
         {...rest}
         ref={ref}
       />
       {!!error && (
-        <div className="flex items-center absolute right-0 z-10">
+        <div role="alert" className="flex items-center absolute right-0 z-10">
           <Tooltip.Provider>
             <Tooltip.Root>
               <Tooltip.Trigger className="hover:text-red-600 text-red-500">

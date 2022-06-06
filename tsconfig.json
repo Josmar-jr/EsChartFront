@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/components/ActiveLinkjs"  ],
+, "src/components/ActiveLinkjs", "jest.config.js"  ],
   "exclude": [
     "node_modules"
   ]

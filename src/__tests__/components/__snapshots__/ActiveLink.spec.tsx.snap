@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Sidebar Component should match snapshot 1`] = `
+<a
+  className="hover:text-primary transition-all focus:ring focus:secondary outline-none inline-block px-[12px] w-full py-1 relative after:content-[''] after:absolute after:h-10 after:w-[3.8px] after:rounded-r after:block after:top-[-4px] after:left-[-1px] text-primary after:bg-primary"
+  href="/dashboard"
+  onClick={[Function]}
+  onMouseEnter={[Function]}
+>
+  Dashboard
+</a>
+`;
