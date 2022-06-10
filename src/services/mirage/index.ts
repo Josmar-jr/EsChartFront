@@ -36,7 +36,8 @@ export function makeServer({ environment = 'test' } = {}) {
             email: 'john.doe@test.com',
             password: '@Abc1234',
             permissions: ['user.create', 'user.edit', 'metrics.list'],
-            roles: ['Administration']
+            roles: ['Administration'],
+            avatar: 'https://github.com/josmar-jr.png'
           }
         ]
       });
@@ -47,7 +48,7 @@ export function makeServer({ environment = 'test' } = {}) {
       this.timing = 1250;
 
       this.get('/me', (schema, request) => {
-        const { name, email, roles, permissions } = schema.db.users[0];
+        const { name, email, roles, permissions, avatar } = schema.db.users[0];
         const { Authorization } = request.requestHeaders;
         const [, token] = Authorization.split(' ');
 
@@ -57,7 +58,8 @@ export function makeServer({ environment = 'test' } = {}) {
           name,
           email,
           roles,
-          permissions
+          permissions,
+          avatar
         };
       });
 

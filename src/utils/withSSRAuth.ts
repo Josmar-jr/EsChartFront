@@ -23,6 +23,15 @@ export function withSSRAuth<P>(
     const cookies = parseCookies(ctx);
     const token = cookies['eschart.token'];
 
+    if (!token) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false
+        }
+      };
+    }
+
     if (options) {
       // const user = decode<{ permissions: string[], roles: string[] }>(token);
       // console.log(user);

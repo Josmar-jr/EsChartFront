@@ -17,13 +17,13 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     <label
       htmlFor={name}
       data-testid="label-wrapper"
-      className="flex self-center items-center relative flex-1 bg-neutral"
+      className="flex self-center items-center relative flex-1"
     >
       <input
         id={name}
         name={name}
         aria-label={name}
-        className={`${customClass} appearance-none rounded-none w-full px-3 py-2 bg-neutral ${
+        className={`${customClass} dark:text-slate-200 appearance-none rounded-none w-full px-3 py-2 dark:border-slate-600 dark:bg-slate-900 bg-neutral ${
           !!error
             ? 'border-red-600 focus:border-red-700'
             : 'border-gray-300 focus:border-primary'

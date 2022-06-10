@@ -34,7 +34,7 @@ export function ActiveLink({
     <Link {...rest}>
       {cloneElement(children, {
         className: `hover:text-primary transition-all focus:ring focus:secondary outline-none inline-block px-[12px] w-full py-1 relative ${afterStyle} ${
-          isActive ? 'text-primary after:bg-primary' : 'text-slate-500'
+          isActive ? 'text-primary sm:dark:after:bg-secondary dark:text-secondary sm:after:bg-primary' : 'text-slate-500 dark:text-slate-400'
         }`
       })}
     </Link>

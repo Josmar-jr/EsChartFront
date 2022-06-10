@@ -5,12 +5,13 @@ import { CircleNotch } from 'phosphor-react';
 
 import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/Form/Input';
+import { withSSRGuest } from '../utils/withSSRGuest';
 
 const lowercaseRegex = /(?=.*[a-z])/;
 const uppercaseRegex = /(?=.*[A-Z])/;
 const numericRegex = /(?=.*[0-9])/;
 
-const schema = object({
+export const schema = object({
   email: string().email().required(),
   password: string()
     .matches(lowercaseRegex, 'One lowercase require')
@@ -20,7 +21,7 @@ const schema = object({
     .required('required')
 }).required();
 
-export default function Home() {
+export default function Login() {
   const { signIn } = useAuth();
 
   const {
@@ -32,7 +33,10 @@ export default function Home() {
   });
 
   return (
-    <div className="h-screen flex bg-neutral flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <main
+      role="main"
+      className="h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+    >
       <div className="w-32 lg:w-48">
         <svg
           className="w-full"
@@ -86,24 +90,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            />
-            <label
-              htmlFor="remember-me"
-              className="ml-2 block text-sm text-gray-900"
-            >
-              Remember me
-            </label>
-          </div>
-
+        <div className="flex items-center justify-end">
           <div className="text-sm">
-            <a href="#" className="font-medium text-primary hover:opacity-95">
+            <a
+              href="#"
+              className="font-medium text-primary dark:text-secondary hover:opacity-95"
+            >
               Forgot your password?
             </a>
           </div>
@@ -112,8 +104,9 @@ export default function Home() {
         <div>
           <button
             type="submit"
-            className="disabled:bg-primaryDark disabled:cursor-not-allowed group relative w-full flex justify-center py-2 px-4 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            className="disabled:bg-primaryDark dark:bg-secondary disabled:cursor-not-allowed group relative w-full flex justify-center py-2 px-4 border border-primary text-sm font-medium rounded-md text-white bg-primary hover:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             disabled={isSubmitting}
+            role="button"
           >
             {isSubmitting ? (
               <CircleNotch
@@ -128,6 +121,12 @@ export default function Home() {
           </button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async ctx => {
+  return {
+    props: {}
+  };
+});
