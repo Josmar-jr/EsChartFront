@@ -1,20 +1,16 @@
 import { LinkProps } from 'next/link';
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { ActiveLink } from '../ActiveLink';
 
 type NavLinkProps = LinkProps & {
-  icon: ReactElement;
-  children: string;
+  children: ReactNode;
   href: string;
 };
 
-export function NavLink({ icon, children, href, ...rest }: NavLinkProps) {
+export function NavLink({ children, href, ...rest }: NavLinkProps) {
   return (
     <ActiveLink href={href} passHref>
-      <a className="flex">
-        {icon}
-        {children}
-      </a>
+      <a>{children}</a>
     </ActiveLink>
   );
 }

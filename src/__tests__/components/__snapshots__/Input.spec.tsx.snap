@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input Component should match snapshot input with prop error 1`] = `
+<label
+  className="flex self-center items-center relative flex-1 bg-neutral"
+  data-testid="label-wrapper"
+  htmlFor="email"
+>
+  <input
+    aria-label="email"
+    className=" appearance-none rounded-none w-full px-3 py-2 bg-neutral border-red-600 focus:border-red-700 border placeholder-gray-500 text-gray-900 focus:z-10 focus:outline-none sm:text-sm"
+    id="email"
+    name="email"
+  />
+  <div
+    className="flex items-center absolute right-0 z-10"
+    role="alert"
+  >
+    <button
+      className="hover:text-red-600 text-red-500"
+      data-state="closed"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onMouseDown={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <svg
+        className="m-2 bg-neutral"
+        fill="currentColor"
+        height={18}
+        viewBox="0 0 256 256"
+        width={18}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          fill="none"
+          height="256"
+          width="256"
+        />
+        <circle
+          cx="128"
+          cy="128"
+          fill="none"
+          r="96"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="24"
+        />
+        <line
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="24"
+          x1="128"
+          x2="128"
+          y1="80"
+          y2="132"
+        />
+        <circle
+          cx="128"
+          cy="172"
+          r="16"
+        />
+      </svg>
+    </button>
+  </div>
+</label>
+`;
+
+exports[`Input Component should match snapshot input without prop error 1`] = `
+<label
+  className="flex self-center items-center relative flex-1 bg-neutral"
+  data-testid="label-wrapper"
+  htmlFor="email"
+>
+  <input
+    aria-label="email"
+    className=" appearance-none rounded-none w-full px-3 py-2 bg-neutral border-gray-300 focus:border-primary border placeholder-gray-500 text-gray-900 focus:z-10 focus:outline-none sm:text-sm"
+    id="email"
+    name="email"
+  />
+</label>
+`;

@@ -13,7 +13,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <Toaster />
-      <Component {...pageProps} />
+      <div className="bg-neutral">
+        <Component {...pageProps} />
+      </div>
     </AuthProvider>
   );
 }

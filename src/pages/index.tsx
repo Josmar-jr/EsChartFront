@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object, string } from 'yup';
+import { CircleNotch } from 'phosphor-react';
 
 import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/Form/Input';
-import { CircleNotch } from 'phosphor-react';
 
 const lowercaseRegex = /(?=.*[a-z])/;
 const uppercaseRegex = /(?=.*[A-Z])/;
