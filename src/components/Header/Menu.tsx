@@ -79,7 +79,7 @@ export function Menu() {
         </DropdownMenu.Group>
         <DropdownMenu.Separator className="border-b border-slate-300 my-1" />
         <DropdownMenu.Group>
-          <button onClick={() => signOut()}>
+          <button onClick={() => signOut()} className="w-full">
             <DropdownMenu.Item className="p-[4px] w-full flex gap-2 items-center rounded-sm outline-none focus:dark:bg-[rgba(253,252,252,0.1)] hover:dark:bg-[rgba(253,252,252,0.1)] focus:bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)]">
               <SignOut size={20} weight="bold" /> Terminar sessão
             </DropdownMenu.Item>

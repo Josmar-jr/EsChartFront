@@ -2,26 +2,12 @@ import Link from 'next/link';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { object, string } from 'yup';
 
 import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/Form/Input';
 import { withSSRGuest } from '../utils/withSSRGuest';
 import { Button } from '../components/Form/Button';
-
-const lowercaseRegex = /(?=.*[a-z])/;
-const uppercaseRegex = /(?=.*[A-Z])/;
-const numericRegex = /(?=.*[0-9])/;
-
-export const schema = object({
-  email: string().email().required(),
-  password: string()
-    .matches(lowercaseRegex, 'One lowercase require')
-    .matches(uppercaseRegex, 'One uppercase required!')
-    .matches(numericRegex, 'One numeric required!')
-    .min(8, 'Minimum 8 characters required!')
-    .required('required')
-}).required();
+import { loginSchema } from '../utils/yupValidation';
 
 export default function Login() {
   const { signIn } = useAuth();
@@ -31,7 +17,7 @@ export default function Login() {
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(loginSchema)
   });
 
   return (

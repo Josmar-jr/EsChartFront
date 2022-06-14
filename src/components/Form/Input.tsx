@@ -39,14 +39,14 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
                 <WarningCircle
                   size={18}
                   weight="bold"
-                  className="m-2 bg-neutral"
+                  className="m-2 bg-neutral dark:bg-slate-900"
                 />
               </Tooltip.Trigger>
               <Tooltip.Content
                 side="right"
-                className="bg-red-100 px-2 py-1 text-xs w-26"
+                className="bg-red-100 px-2 py-1 text-xs w-26 dark:bg-red-500"
               >
-                <Tooltip.Arrow className="fill-red-100" />
+                <Tooltip.Arrow className="fill-red-100 dark:fill-red-500" />
                 {error.message}
               </Tooltip.Content>
             </Tooltip.Root>

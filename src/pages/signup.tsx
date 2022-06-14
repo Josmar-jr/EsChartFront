@@ -1,33 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { object, string, ref } from 'yup';
-import { CircleNotch } from 'phosphor-react';
 
-import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/Form/Input';
 import { withSSRGuest } from '../utils/withSSRGuest';
 import { Button } from '../components/Form/Button';
-
-const lowercaseRegex = /(?=.*[a-z])/;
-const uppercaseRegex = /(?=.*[A-Z])/;
-const numericRegex = /(?=.*[0-9])/;
-
-export const schema = object({
-  email: string().email().required(),
-  name: string()
-    .min(3, 'O minimo de caracteres são 3')
-    .max(20, 'O máximo de caracteres são 20')
-    .required(),
-  password: string()
-    .matches(lowercaseRegex, 'One lowercase require')
-    .matches(uppercaseRegex, 'One uppercase required!')
-    .matches(numericRegex, 'One numeric required!')
-    .min(8, 'Minimum 8 characters required!')
-    .required('required'),
-  confirmPassword: string()
-    .oneOf([ref('password'), 'Senhas não conferem'], 'Senhas não conferem')
-    .required('required')
-}).required();
+import { signUpSchema } from '../utils/yupValidation';
 
 type SignUpCredentials = {
   email: string;
@@ -42,7 +19,7 @@ export default function SignUp() {
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(signUpSchema)
   });
 
   const signUp = async ({
@@ -140,7 +117,7 @@ export default function SignUp() {
           />
           <label
             htmlFor="remember-me"
-            className="ml-2 block text-sm text-gray-900"
+            className="ml-2 block text-sm text-gray-900 dark:text-slate-400"
           >
             Concordo com os termos de uso
           </label>

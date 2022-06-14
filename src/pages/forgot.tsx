@@ -1,8 +1,29 @@
 import Link from 'next/link';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+
+import { forgotSchema } from '../utils/yupValidation';
+
 import { Button } from '../components/Form/Button';
 import { Input } from '../components/Form/Input';
 
+type SendEmailParams = {
+  email: string;
+};
+
 export default function Forgot() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm({
+    resolver: yupResolver(forgotSchema)
+  });
+
+  const handleSendEmail = ({ email }: SendEmailParams) => {
+    console.log(email);
+  };
+
   return (
     <main
       role="main"
@@ -10,18 +31,21 @@ export default function Forgot() {
     >
       <h1 className="font-bold text-2xl text-slate-900">Recuperar senha</h1>
 
-      <form className="mt-8 space-y-4 max-w-sm w-full">
+      <form
+        className="mt-8 space-y-4 max-w-sm w-full"
+        onSubmit={handleSubmit(handleSendEmail)}
+      >
         <div>
           <Input
             name="email"
-            // error={errors.email}
+            error={errors.email}
             placeholder="Email"
             customClass="rounded-lg shadow-sm"
-            // {...register('email')}
+            {...register('email')}
           />
         </div>
 
-        <Button type="submit" isLoading={false}>
+        <Button type="submit" isLoading={isSubmitting}>
           Recuperar
         </Button>
 
