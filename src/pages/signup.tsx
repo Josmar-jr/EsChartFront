@@ -1,35 +1,25 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 import { Input } from '../components/Form/Input';
 import { withSSRGuest } from '../utils/withSSRGuest';
 import { Button } from '../components/Form/Button';
 import { signUpSchema } from '../utils/yupValidation';
-
-type SignUpCredentials = {
-  email: string;
-  name: string;
-  password: string;
-  confirmPassword: string;
-};
+import { useAuth } from '../contexts/AuthContext';
 
 export default function SignUp() {
+  const { signUp } = useAuth();
+
   const {
     register,
+    trigger,
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
     resolver: yupResolver(signUpSchema)
   });
-
-  const signUp = async ({
-    email,
-    password,
-    confirmPassword,
-    name
-  }: SignUpCredentials) => {
-    console.log(email, password, confirmPassword, name, confirmPassword);
-  };
 
   return (
     <main
@@ -98,7 +88,7 @@ export default function SignUp() {
           </div>
           <div>
             <Input
-              name="password"
+              name="confirm-password"
               type="password"
               error={errors.confirmPassword}
               placeholder="Confirme sua senha"
@@ -110,14 +100,17 @@ export default function SignUp() {
 
         <div className="flex items-center">
           <input
-            id="remember-me"
-            name="remember-me"
+            id="confirm-terms"
+            name="confirm-terms"
             type="checkbox"
-            className="h-4 w-4 bg-red-400 text-primary focus:ring-primary border-gray-300 rounded"
+            className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+            {...register('confirmTerms')}
           />
           <label
-            htmlFor="remember-me"
-            className="ml-2 block text-sm text-gray-900 dark:text-slate-400"
+            htmlFor="confirm-terms"
+            className={`${
+              errors.confirmTerms ? 'text-red-600' : 'text-gray-900'
+            } ml-2 flex text-sm  dark:text-slate-400`}
           >
             Concordo com os termos de uso
           </label>

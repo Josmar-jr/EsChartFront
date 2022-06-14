@@ -10,31 +10,16 @@ import Router from 'next/router';
 import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import toast from 'react-hot-toast';
 
-import { api } from '../services/apiClient';
+import { api } from '../../services/apiClient';
 import { useTheme } from 'next-themes';
 
-type User = {
-  email: string;
-  permissions: string[];
-  roles: string[];
-  avatar?: string;
-};
-
-export type SignInCredentials = {
-  email: string;
-  password: string;
-};
-
-type AuthContextData = {
-  signIn: (credentials: SignInCredentials) => Promise<void>;
-  signOut: () => void;
-  user: User;
-  isAuthenticated: boolean;
-};
-
-export interface AuthProviderProps {
-  children: ReactNode;
-}
+import {
+  AuthContextData,
+  AuthProviderProps,
+  SignInCredentials,
+  SignUpCredentials,
+  User
+} from './types';
 
 const AuthContext = createContext({} as AuthContextData);
 
@@ -112,8 +97,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const signUp = async ({
+    name,
+    email,
+    password,
+    confirmPassword,
+    confirmTerms
+  }: SignUpCredentials) => {
+    console.log('Sign Up', name, email, password, confirmPassword, confirmTerms);
+  };
+
   return (
-    <AuthContext.Provider value={{ signIn, signOut, isAuthenticated, user }}>
+    <AuthContext.Provider
+      value={{ signIn, signOut, signUp, isAuthenticated, user }}
+    >
       {children}
     </AuthContext.Provider>
   );

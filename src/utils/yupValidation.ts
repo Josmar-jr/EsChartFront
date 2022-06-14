@@ -1,4 +1,4 @@
-import { object, string, ref } from 'yup';
+import { object, string, ref, boolean } from 'yup';
 
 const lowercaseRegex = /(?=.*[a-z])/;
 const uppercaseRegex = /(?=.*[A-Z])/;
@@ -14,6 +14,10 @@ const baseValidation = {
     .required('required')
 };
 
+const confirmPassword = string()
+  .oneOf([ref('password'), 'Senhas não conferem'], 'Senhas não conferem')
+  .required('required');
+
 export const loginSchema = object({
   ...baseValidation
 }).required();
@@ -24,11 +28,18 @@ export const signUpSchema = object({
     .min(3, 'O minimo de caracteres são 3')
     .max(20, 'O máximo de caracteres são 20')
     .required(),
-  confirmPassword: string()
-    .oneOf([ref('password'), 'Senhas não conferem'], 'Senhas não conferem')
-    .required('required')
+  confirmTerms: boolean().oneOf(
+    [true],
+    'You must accept the terms and conditions'
+  ),
+  confirmPassword
 }).required();
 
 export const forgotSchema = object({
   email: baseValidation.email
 }).required();
+
+export const resetPassword = object({
+  password: baseValidation.password,
+  confirmPassword
+});
