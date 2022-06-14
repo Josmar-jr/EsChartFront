@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import * as Dialog from '@radix-ui/react-dialog';
 import * as Avatar from '@radix-ui/react-avatar';
 
 import { Globe, Moon, SignOut, User } from 'phosphor-react';

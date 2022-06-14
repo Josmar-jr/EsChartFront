@@ -1,8 +1,7 @@
-import Link from 'next/link';
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { object, string } from 'yup';
+import { object, string, ref } from 'yup';
+import { CircleNotch } from 'phosphor-react';
 
 import { useAuth } from '../contexts/AuthContext';
 import { Input } from '../components/Form/Input';
@@ -15,17 +14,29 @@ const numericRegex = /(?=.*[0-9])/;
 
 export const schema = object({
   email: string().email().required(),
+  name: string()
+    .min(3, 'O minimo de caracteres são 3')
+    .max(20, 'O máximo de caracteres são 20')
+    .required(),
   password: string()
     .matches(lowercaseRegex, 'One lowercase require')
     .matches(uppercaseRegex, 'One uppercase required!')
     .matches(numericRegex, 'One numeric required!')
     .min(8, 'Minimum 8 characters required!')
+    .required('required'),
+  confirmPassword: string()
+    .oneOf([ref('password'), 'Senhas não conferem'], 'Senhas não conferem')
     .required('required')
 }).required();
 
-export default function Login() {
-  const { signIn } = useAuth();
+type SignUpCredentials = {
+  email: string;
+  name: string;
+  password: string;
+  confirmPassword: string;
+};
 
+export default function SignUp() {
   const {
     register,
     handleSubmit,
@@ -33,6 +44,15 @@ export default function Login() {
   } = useForm({
     resolver: yupResolver(schema)
   });
+
+  const signUp = async ({
+    email,
+    password,
+    confirmPassword,
+    name
+  }: SignUpCredentials) => {
+    console.log(email, password, confirmPassword, name, confirmPassword);
+  };
 
   return (
     <main
@@ -66,53 +86,78 @@ export default function Login() {
 
       <form
         className="mt-8 space-y-4 max-w-sm w-full"
-        onSubmit={handleSubmit(signIn)}
+        onSubmit={handleSubmit(signUp)}
         method="POST"
       >
         <input type="hidden" name="remember" defaultValue="true" />
-        <div className="rounded-md shadow-sm -space-y-px flex flex-col">
+        <div className="gap-2 -space-y-px flex flex-col">
           <div>
             <Input
               name="email"
               error={errors.email}
-              placeholder="Email"
-              customClass="rounded-t-lg"
+              placeholder="Seu E-mail"
+              customClass="rounded-lg shadow-sm"
               {...register('email')}
             />
           </div>
           <div>
             <Input
-              name="current-password"
-              error={errors.password}
+              name="name"
+              placeholder="Seu nome"
+              error={errors.name}
+              customClass="rounded-lg shadow-sm"
+              {...register('name')}
+            />
+          </div>
+          <div>
+            <Input
+              name="password"
               type="password"
-              placeholder="Password"
-              customClass="rounded-b-lg"
+              error={errors.password}
+              placeholder="Sua senha"
+              customClass="rounded-lg shadow-sm"
               {...register('password')}
+            />
+          </div>
+          <div>
+            <Input
+              name="password"
+              type="password"
+              error={errors.confirmPassword}
+              placeholder="Confirme sua senha"
+              customClass="rounded-lg shadow-sm"
+              {...register('confirmPassword')}
             />
           </div>
         </div>
 
         <div className="flex items-center">
-          <Link href="/forgot">
-            <a className="text-sm font-medium text-primary dark:text-secondary hover:opacity-80 transition-opacity">
-              Forgot your password?
-            </a>
-          </Link>
+          <input
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            className="h-4 w-4 bg-red-400 text-primary focus:ring-primary border-gray-300 rounded"
+          />
+          <label
+            htmlFor="remember-me"
+            className="ml-2 block text-sm text-gray-900"
+          >
+            Concordo com os termos de uso
+          </label>
         </div>
 
-        <Button type="submit" isLoading={isSubmitting}>
-          Entrar
-        </Button>
-
-        <div className="text-sm text-center mx-auto">
-          Não tem uma conta?{' '}
-          <Link href="/signup">
-            <a className="font-bold dark:text-secondary text-primary hover:opacity-80 transition-opacity">
-              Criar uma conta
-            </a>
-          </Link>
+        <div>
+          <Button isLoading={isSubmitting} type="submit">
+            Criar conta
+          </Button>
         </div>
       </form>
     </main>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async ctx => {
+  return {
+    props: {}
+  };
+});

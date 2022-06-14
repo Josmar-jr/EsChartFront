@@ -44,8 +44,6 @@ export function signOut() {
   destroyCookie(undefined, 'eschart.token');
   destroyCookie(undefined, 'eschart.refreshToken');
 
-  authChannel.postMessage('signOut');
-
   Router.push('/');
 }
 
@@ -54,29 +52,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
-
-  useEffect(() => {
-    let emit = false;
-    authChannel = new BroadcastChannel('auth');
-
-    if (!emit) {
-      authChannel.onmessage = message => {
-        console.log(message);
-        switch (message.data) {
-          case 'signOut':
-            signOut();
-            // authChannel.close();
-            break;
-          default:
-            break;
-        }
-
-        emit = true;
-
-        return;
-      };
-    }
-  }, []);
 
   useEffect(() => {
     const { 'eschart.token': token } = parseCookies();
@@ -96,6 +71,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
     }
   }, []);
+
+  const customToast = theme === 'dark' && {
+    style: {
+      background: '#1e293b',
+      color: '#f1f5f9'
+    }
+  };
 
   const signIn = async ({ email, password }: SignInCredentials) => {
     try {
@@ -123,22 +105,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-      const customToastSuccess = theme === 'dark' && {
-        style: {
-          background: '#1e293b',
-          color: '#f1f5f9'
-        }
-      };
-
-      toast.success('Login efetuado com sucesso!', customToastSuccess);
+      toast.success('Login efetuado com sucesso!', customToast);
       Router.push('/dashboard');
     } catch {
-      toast.error('Email ou senha incorreto!', {
-        style: {
-          fontSize: '1rem'
-        },
-        duration: 6000
-      });
+      toast.error('Email ou senha incorretos!', customToast);
     }
   };
 
