@@ -1,4 +1,5 @@
 import '../styles/globals.css';
+import { ThemeProvider } from 'next-themes';
 
 import { makeServer } from '../services/mirage';
 
@@ -11,12 +12,14 @@ if (process.env.NODE_ENV === 'development') {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <AuthProvider>
-      <Toaster />
-      <div className="bg-neutral">
-        <Component {...pageProps} />
-      </div>
-    </AuthProvider>
+    <ThemeProvider attribute="class" defaultTheme='dark'>
+      <AuthProvider>
+        <Toaster />
+        <div className="h-screen w-screen bg-neutral dark:bg-slate-900">
+          <Component {...pageProps} />
+        </div>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

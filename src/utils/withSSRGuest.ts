@@ -23,3 +23,10 @@ export function withSSRGuest<P>(fn: GetServerSideProps<P>): GetServerSideProps {
     return await fn(ctx);
   };
 }
+
+export const getServerSideProps = withSSRGuest(async ctx => {
+  return {
+    props: {}
+  };
+});
+

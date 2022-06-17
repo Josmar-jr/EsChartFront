@@ -1,23 +1,24 @@
-import Link from 'next/link';
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useAuth } from '../contexts/AuthContext';
+import toast, { Toaster } from 'react-hot-toast';
+
 import { Input } from '../components/Form/Input';
 import { withSSRGuest } from '../utils/withSSRGuest';
 import { Button } from '../components/Form/Button';
-import { loginSchema } from '../utils/yupValidation';
+import { signUpSchema } from '../utils/yupValidation';
+import { useAuth } from '../contexts/AuthContext';
 
-export default function Login() {
-  const { signIn } = useAuth();
+export default function SignUp() {
+  const { signUp } = useAuth();
 
   const {
     register,
+    trigger,
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: yupResolver(loginSchema)
+    resolver: yupResolver(signUpSchema)
   });
 
   return (
@@ -52,53 +53,81 @@ export default function Login() {
 
       <form
         className="mt-8 space-y-4 max-w-sm w-full"
-        onSubmit={handleSubmit(signIn)}
+        onSubmit={handleSubmit(signUp)}
         method="POST"
       >
         <input type="hidden" name="remember" defaultValue="true" />
-        <div className="rounded-md shadow-sm -space-y-px flex flex-col">
+        <div className="gap-2 -space-y-px flex flex-col">
           <div>
             <Input
               name="email"
               error={errors.email}
-              placeholder="Email"
-              customClass="rounded-t-lg"
+              placeholder="Seu E-mail"
+              customClass="rounded-lg shadow-sm"
               {...register('email')}
             />
           </div>
           <div>
             <Input
-              name="current-password"
-              error={errors.password}
+              name="name"
+              placeholder="Seu nome"
+              error={errors.name}
+              customClass="rounded-lg shadow-sm"
+              {...register('name')}
+            />
+          </div>
+          <div>
+            <Input
+              name="password"
               type="password"
-              placeholder="Password"
-              customClass="rounded-b-lg"
+              error={errors.password}
+              placeholder="Sua senha"
+              customClass="rounded-lg shadow-sm"
               {...register('password')}
+            />
+          </div>
+          <div>
+            <Input
+              name="confirm-password"
+              type="password"
+              error={errors.confirmPassword}
+              placeholder="Confirme sua senha"
+              customClass="rounded-lg shadow-sm"
+              {...register('confirmPassword')}
             />
           </div>
         </div>
 
         <div className="flex items-center">
-          <Link href="/forgot">
-            <a className="text-sm font-medium text-primary dark:text-secondary hover:opacity-80 transition-opacity">
-              Forgot your password?
-            </a>
-          </Link>
+          <input
+            id="confirm-terms"
+            name="confirm-terms"
+            type="checkbox"
+            className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+            {...register('confirmTerms')}
+          />
+          <label
+            htmlFor="confirm-terms"
+            className={`${
+              errors.confirmTerms ? 'text-red-600' : 'text-gray-900'
+            } ml-2 flex text-sm  dark:text-slate-400`}
+          >
+            Concordo com os termos de uso
+          </label>
         </div>
 
-        <Button type="submit" isLoading={isSubmitting}>
-          Entrar
-        </Button>
-
-        <div className="text-sm text-center mx-auto">
-          Não tem uma conta?{' '}
-          <Link href="/signup">
-            <a className="font-bold dark:text-secondary text-primary hover:opacity-80 transition-opacity">
-              Criar uma conta
-            </a>
-          </Link>
+        <div>
+          <Button isLoading={isSubmitting} type="submit">
+            Criar conta
+          </Button>
         </div>
       </form>
     </main>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async ctx => {
+  return {
+    props: {}
+  };
+});

@@ -6,63 +6,37 @@ import {
   useState
 } from 'react';
 import Router from 'next/router';
+
 import { setCookie, parseCookies, destroyCookie } from 'nookies';
-
 import toast from 'react-hot-toast';
-import { api } from '../services/apiClient';
 
-type User = {
-  email: string;
-  permissions: string[];
-  roles: string[];
-};
+import { api } from '../../services/apiClient';
+import { useTheme } from 'next-themes';
 
-export type SignInCredentials = {
-  email: string;
-  password: string;
-};
-
-type AuthContextData = {
-  signIn: (credentials: SignInCredentials) => Promise<void>;
-  signOut: () => void;
-  user: User;
-  isAuthenticated: boolean;
-};
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
+import {
+  AuthContextData,
+  AuthProviderProps,
+  SignInCredentials,
+  SignUpCredentials,
+  User
+} from './types';
 
 const AuthContext = createContext({} as AuthContextData);
 
-// let authChannel: BroadcastChannel;
+let authChannel: BroadcastChannel;
 
 export function signOut() {
   destroyCookie(undefined, 'eschart.token');
   destroyCookie(undefined, 'eschart.refreshToken');
 
-  // authChannel.postMessage('signOut');
-
   Router.push('/');
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const { theme } = useTheme();
+
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
-
-  // useEffect(() => {
-  //   authChannel = new BroadcastChannel('auth');
-
-  //   authChannel.onmessage = message => {
-  //     switch (message.data) {
-  //       case 'signOut':
-  //         signOut();
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   };
-  // }, []);
 
   useEffect(() => {
     const { 'eschart.token': token } = parseCookies();
@@ -71,16 +45,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api
         .get('/me')
         .then(response => {
-          const { email, roles, permissions } = response.data;
+          const { email, roles, permissions, avatar } = response.data;
 
-          setUser({ email, roles, permissions });
+          setUser({ email, roles, permissions, avatar });
         })
         .catch(error => {
           console.error(`Router '/me' with error ${error}`);
           signOut();
+          authChannel.close();
         });
     }
   }, []);
+
+  const customToast = theme === 'dark' && {
+    style: {
+      background: '#1e293b',
+      color: '#f1f5f9'
+    }
+  };
 
   const signIn = async ({ email, password }: SignInCredentials) => {
     try {
@@ -108,20 +90,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-      toast.success('Login efetuado com sucesso!');
+      toast.success('Login efetuado com sucesso!', customToast);
       Router.push('/dashboard');
     } catch {
-      toast.error('Email ou senha incorreto!', {
-        style: {
-          fontSize: '1rem'
-        },
-        duration: 6000
-      });
+      toast.error('Email ou senha incorretos!', customToast);
     }
   };
 
+  const signUp = async ({
+    name,
+    email,
+    password,
+    confirmPassword,
+    confirmTerms
+  }: SignUpCredentials) => {
+    console.log('Sign Up', name, email, password, confirmPassword, confirmTerms);
+  };
+
   return (
-    <AuthContext.Provider value={{ signIn, signOut, isAuthenticated, user }}>
+    <AuthContext.Provider
+      value={{ signIn, signOut, signUp, isAuthenticated, user }}
+    >
       {children}
     </AuthContext.Provider>
   );

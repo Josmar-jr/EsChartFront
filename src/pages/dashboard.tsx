@@ -1,7 +1,10 @@
 import { useAuth } from '../contexts/AuthContext';
-import { Sidebar } from '../components/Sidebar';
 
 import { CircleNotch } from 'phosphor-react';
+
+import { Layout } from '../components/Layout';
+import { withSSRAuth } from '../utils/withSSRAuth';
+// import { withSSRAuth } from '../utils/withSSRAuth';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -19,17 +22,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <main>
-        <h1>Dashboard</h1>
-      </main>
+    <div className="flex dark:bg-slate-900">
+      <Layout>
+        <h1 className="text-2xl">Dashboard</h1>
+      </Layout>
     </div>
   );
 }
 
-// export const getServerSideProps = withSSRAuth(async ctx => {
-//   return {
-//     props: {}
-//   };
-// });
+export const getServerSideProps = withSSRAuth(async ctx => {
+  return {
+    props: {}
+  };
+});
