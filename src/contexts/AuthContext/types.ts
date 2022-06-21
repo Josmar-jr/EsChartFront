@@ -2,8 +2,10 @@ import { ReactNode } from 'react';
 
 export type User = {
   email: string;
-  permissions: string[];
-  roles: string[];
+  name?: string;
+  username?: string;
+  permissions?: string[];
+  roles?: string[];
   avatar?: string;
 };
 

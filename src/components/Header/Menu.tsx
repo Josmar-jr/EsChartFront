@@ -11,10 +11,13 @@ import { Globe, Moon, SignOut, User } from 'phosphor-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 import { Switch } from '../Form/Switch';
+import { SignOutModal } from '../Modals/SignOutModal';
+import { useDisclosure } from '../../contexts/DisclosureContext';
 
 export function Menu() {
   const { theme, setTheme } = useTheme();
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
+  const { onOpenSignOutModal } = useDisclosure();
 
   const [isChecked, setIsChecked] = useState(theme === 'dark' && true);
 
@@ -25,17 +28,22 @@ export function Menu() {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className="w-9 outline-none focus:ring focus:secondary rounded-full">
-        <Avatar.Root>
-          <Avatar.Image
-            className="w-full rounded-full"
-            src={user.avatar}
-            alt="Avatar"
-          />
-          <Avatar.Fallback />
+      <DropdownMenu.Trigger className="flex w-9 h-9 outline-none drop-shadow-md focus:ring focus:secondary rounded-full">
+        <Avatar.Root className="w-9 h-9 rounded-full border-2 border-primary flex items-center justify-center bg-green-200">
+          {user?.avatar ? (
+            <Avatar.Image
+              className="w-full rounded-full drop-shadow-md"
+              src={user.avatar}
+              alt="Avatar"
+            />
+          ) : (
+            <Avatar.Fallback className="font-bold">
+              {user?.name?.split('')[0]}
+            </Avatar.Fallback>
+          )}
         </Avatar.Root>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content className="border dark:bg-slate-900 dark:border-slate-800 outline-none border-slate-300 p-2 rounded-md shadow-lg mt-1 bg-neutral">
+      <DropdownMenu.Content className="border dark:bg-slate-900 dark:border-slate-800 outline-none border-slate-300 p-2 rounded-md shadow-lg mt-1 bg-neutral-200">
         <DropdownMenu.Group>
           <Link href="/">
             <a>
@@ -52,15 +60,18 @@ export function Menu() {
             </DropdownMenu.TriggerItem>
 
             <DropdownMenu.Content
-              className="border dark:bg-slate-900 dark:border-slate-800 outline-none border-slate-300 p-2 rounded-md shadow-lg mt-1 bg-neutral"
+              className="border dark:bg-slate-900 dark:border-slate-800 outline-none border-slate-300 p-2 rounded-md shadow-lg mt-1 bg-neutral-200"
               sideOffset={2}
               alignOffset={-5}
             >
               <DropdownMenu.Item className="p-[4px] cursor-pointer w-full flex gap-2 items-center rounded-sm outline-none focus:dark:bg-[rgba(253,252,252,0.1)] hover:dark:bg-[rgba(253,252,252,0.1)] focus:bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)]">
-                Save Page As…
+                Português
               </DropdownMenu.Item>
               <DropdownMenu.Item className="p-[4px] cursor-pointer w-full flex gap-2 items-center rounded-sm outline-none focus:dark:bg-[rgba(253,252,252,0.1)] hover:dark:bg-[rgba(253,252,252,0.1)] focus:bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)]">
-                Create Shortcut…
+                Inglês
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className="p-[4px] cursor-pointer w-full flex gap-2 items-center rounded-sm outline-none focus:dark:bg-[rgba(253,252,252,0.1)] hover:dark:bg-[rgba(253,252,252,0.1)] focus:bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)]">
+                Inglês
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Root>
@@ -77,9 +88,9 @@ export function Menu() {
             </DropdownMenu.Item>
           </button>
         </DropdownMenu.Group>
-        <DropdownMenu.Separator className="border-b border-slate-300 my-1" />
+        <DropdownMenu.Separator className="border-b dark:border-slate-700 border-slate-300 my-1" />
         <DropdownMenu.Group>
-          <button onClick={() => signOut()} className="w-full">
+          <button className="w-full" onClick={onOpenSignOutModal}>
             <DropdownMenu.Item className="p-[4px] w-full flex gap-2 items-center rounded-sm outline-none focus:dark:bg-[rgba(253,252,252,0.1)] hover:dark:bg-[rgba(253,252,252,0.1)] focus:bg-[rgba(0,0,0,0.1)] hover:bg-[rgba(0,0,0,0.1)]">
               <SignOut size={20} weight="bold" /> Terminar sessão
             </DropdownMenu.Item>

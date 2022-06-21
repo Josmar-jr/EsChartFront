@@ -1,10 +1,9 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 type DisclosureContextData = {
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  onToggle: () => void;
+  isOpenSignOutModal: boolean;
+  onOpenSignOutModal: () => void;
+  onToggleSignOutModal: () => void;
 };
 
 interface DisclosureProviderProps {
@@ -14,22 +13,24 @@ interface DisclosureProviderProps {
 const DisclosureContext = createContext({} as DisclosureContextData);
 
 export function DisclosureProvider({ children }: DisclosureProviderProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenSignOutModal, setIsOpenSignOutModal] = useState(false);
 
-  function onClose() {
-    setIsOpen(false);
+  function onOpenSignOutModal() {
+    setIsOpenSignOutModal(true);
   }
 
-  function onOpen() {
-    setIsOpen(true);
-  }
-
-  function onToggle() {
-    setIsOpen(oldState => !oldState);
+  function onToggleSignOutModal() {
+    setIsOpenSignOutModal(!isOpenSignOutModal);
   }
 
   return (
-    <DisclosureContext.Provider value={{ isOpen, onOpen, onClose, onToggle }}>
+    <DisclosureContext.Provider
+      value={{
+        isOpenSignOutModal,
+        onOpenSignOutModal,
+        onToggleSignOutModal
+      }}
+    >
       {children}
     </DisclosureContext.Provider>
   );

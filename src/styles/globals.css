@@ -4,6 +4,17 @@
 
 @layer base {
   html {
-    font-family: "Roboto", system-ui, sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .hover-text {
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    top: 12px;
+    left: 12px;
+    border-radius: 50%;
+    overflow: hidden;
   }
 }

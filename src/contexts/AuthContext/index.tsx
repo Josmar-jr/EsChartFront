@@ -25,12 +25,12 @@ const AuthContext = createContext({} as AuthContextData);
 
 let authChannel: BroadcastChannel;
 
-export function signOut() {
+export const signOut = () => {
   destroyCookie(undefined, 'eschart.token');
   destroyCookie(undefined, 'eschart.refreshToken');
 
   Router.push('/');
-}
+};
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { theme } = useTheme();
@@ -43,16 +43,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (token) {
       api
-        .get('/me')
+        .get('/extensao_ufrn_api/user/3')
         .then(response => {
-          const { email, roles, permissions, avatar } = response.data;
+          const {
+            email,
+            name,
+            username,
+            avatar,
+            user_permissions: permissions
+          } = response.data;
 
-          setUser({ email, roles, permissions, avatar });
+          setUser({ email, name, permissions, avatar, username });
+          console.log(user)
         })
         .catch(error => {
           console.error(`Router '/me' with error ${error}`);
           signOut();
-          authChannel.close();
+          // authChannel.close();
         });
     }
   }, []);
@@ -66,12 +73,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = async ({ email, password }: SignInCredentials) => {
     try {
-      const { data } = await api.post('/sessions', {
+      const { data } = await api.post('/token', {
         email,
         password
       });
 
-      const { roles, permissions, token, refreshToken } = data;
+      const { access: token, refresh: refreshToken } = data;
 
       setCookie(undefined, 'eschart.token', token, {
         maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -83,9 +90,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       setUser({
-        email,
-        permissions,
-        roles
+        email
       });
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
@@ -104,7 +109,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     confirmPassword,
     confirmTerms
   }: SignUpCredentials) => {
-    console.log('Sign Up', name, email, password, confirmPassword, confirmTerms);
+    console.log(
+      'Sign Up',
+      name,
+      email,
+      password,
+      confirmPassword,
+      confirmTerms
+    );
   };
 
   return (

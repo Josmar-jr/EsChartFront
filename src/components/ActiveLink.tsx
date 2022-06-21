@@ -8,7 +8,7 @@ type ActiveLink = LinkProps & {
 };
 
 const afterStyle =
-  "after:content-[''] after:absolute after:h-10 after:w-[3.8px] after:rounded-r after:block after:top-[-4px] after:left-[-1px]";
+  "after:content-[''] after:absolute after:h-[1.5px] after:w-full after:rounded-r after:block after:top-[35px] after:left-[-1px]";
 
 export function ActiveLink({
   children,
@@ -33,8 +33,8 @@ export function ActiveLink({
   return (
     <Link {...rest}>
       {cloneElement(children, {
-        className: `hover:text-primary transition-all focus:ring focus:secondary outline-none inline-block px-[12px] w-full py-1 relative ${afterStyle} ${
-          isActive ? 'text-primary sm:dark:after:bg-secondary dark:text-secondary sm:after:bg-primary' : 'text-slate-500 dark:text-slate-400'
+        className: `text-sm py-2 hover:bg-gray-200 transition-colors rounded-md transition-all focus:ring focus:secondary outline-none inline-block px-[12px] w-full py-1 relative ${afterStyle} ${
+          isActive ? 'text-primary font-bold dark:after:bg-secondary dark:text-secondary after:bg-primary' : 'text-slate-500 dark:text-slate-400'
         }`
       })}
     </Link>

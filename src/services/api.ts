@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
 import { signOut } from '../contexts/AuthContext';
+
 import { AuthTokenError } from './errors/AuthTokenError';
 
 let isRefreshing = false;
@@ -10,7 +11,7 @@ export function setupApiClient(ctx = undefined) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: `http://localhost:3000/api`,
+    baseURL: `https://extensao-api-ufrn.herokuapp.com/api`,
     headers: {
       Authorization: `Bearer ${cookies['eschart.token']}`
     }

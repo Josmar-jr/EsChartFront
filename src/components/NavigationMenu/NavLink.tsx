@@ -9,7 +9,7 @@ type NavLinkProps = LinkProps & {
 
 export function NavLink({ children, href, ...rest }: NavLinkProps) {
   return (
-    <ActiveLink href={href} passHref>
+    <ActiveLink href={href} passHref {...rest}>
       <a>{children}</a>
     </ActiveLink>
   );
