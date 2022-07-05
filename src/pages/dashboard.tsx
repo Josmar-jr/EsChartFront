@@ -1,10 +1,6 @@
-import { useAuth } from '../contexts/AuthContext';
-
-import { CircleNotch } from 'phosphor-react';
-
 import { Layout } from '../components/Layout';
 
-// import { withSSRAuth } from '../utils/withSSRAuth';
+import { withSSRAuth } from '../utils/withSSRAuth';
 
 export default function Dashboard() {
   return (
@@ -14,8 +10,8 @@ export default function Dashboard() {
   );
 }
 
-// export const getServerSideProps = withSSRAuth(async ctx => {
-//   return {
-//     props: {}
-//   };
-// });
+export const getServerSideProps = withSSRAuth(async ctx => {
+  return {
+    props: {}
+  };
+});

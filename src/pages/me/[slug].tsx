@@ -21,6 +21,7 @@ export default function Me() {
   const [localImageUrl, setLocalImageUrl] = useState('');
 
   const { user } = useAuth();
+  console.log("user", user);
 
   const {
     register,
@@ -53,13 +54,13 @@ export default function Me() {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto block w-full mb-16 sm:mb-0">
+      <div className="max-w-2xl mx-auto block w-full sm:mb-0">
         <h1 className="text-2xl font-bold">Personal Information</h1>
         <p className="text-slate-500">
           Update your photo and personal details here
         </p>
 
-        <div className="max-w-2xl w-full p-6 border border-gray-300 shadow-md rounded-md mt-8">
+        <div className="max-w-2xl w-full p-6 border border-gray-300 shadow-md rounded-md my-8">
           <form onSubmit={handleSubmit(handleEditUserInfo)}>
             <div className="flex flex-col-reverse sm:flex-row justify-between w-full gap-2 sm:gap-0">
               <div className="flex flex-col gap-4 w-full sm:w-2/3">

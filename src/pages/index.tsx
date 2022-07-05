@@ -61,7 +61,7 @@ export default function Login() {
             <Input
               name="email"
               error={errors.email}
-              placeholder="Email"
+              placeholder="E-mail"
               customClass="rounded-t-lg"
               {...register('email')}
             />
@@ -102,3 +102,9 @@ export default function Login() {
     </main>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async ctx => {
+  return {
+    props: {}
+  };
+});

@@ -23,8 +23,9 @@ export const loginSchema = object({
 }).required();
 
 export const signUpSchema = object({
-  ...baseValidation,
+  email: string().email().required(),
   name: string()
+    .matches(/^[a-zA-Z]+ [a-zA-Z]+$/, 'Entre com o nome e sobrenome')
     .min(3, 'O minimo de caracteres são 3')
     .max(20, 'O máximo de caracteres são 20')
     .required(),
@@ -32,11 +33,12 @@ export const signUpSchema = object({
     [true],
     'You must accept the terms and conditions'
   ),
+  password: baseValidation.password,
   confirmPassword
 }).required();
 
 export const forgotSchema = object({
-  email: baseValidation.email
+  email: string().email().required()
 }).required();
 
 export const resetPassword = object({

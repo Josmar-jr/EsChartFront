@@ -1,11 +1,17 @@
 import Link from 'next/link';
+import Router from 'next/router';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useTheme } from 'next-themes';
 
 import { forgotSchema } from '../utils/yupValidation';
 
 import { Button } from '../components/Form/Button';
 import { Input } from '../components/Form/Input';
+import { api } from '../services/apiClient';
+import { withSSRGuest } from '../utils/withSSRGuest';
 
 type SendEmailParams = {
   email: string;
@@ -20,8 +26,29 @@ export default function Forgot() {
     resolver: yupResolver(forgotSchema)
   });
 
-  const handleSendEmail = ({ email }: SendEmailParams) => {
-    console.log(email);
+  const { theme } = useTheme();
+
+  const customToast = theme === 'dark' && {
+    style: {
+      background: '#1e293b',
+      color: '#f1f5f9'
+    }
+  };
+
+  const handleSendEmail = async ({ email }: SendEmailParams) => {
+    try {
+      await api.post('/extensao_ufrn_api/users/reset_password/', {
+        email
+      });
+
+      toast.success('Quase lá, dê uma checkada no seu E-mail!', customToast);
+      Router.push('/');
+    } catch {
+      toast.error(
+        'Error ao enviar o E-mail de recuperação de senhar!',
+        customToast
+      );
+    }
   };
 
   return (
@@ -58,3 +85,9 @@ export default function Forgot() {
     </main>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async ctx => {
+  return {
+    props: {}
+  };
+});

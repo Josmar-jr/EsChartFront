@@ -1,12 +1,12 @@
 import { GetStaticProps } from 'next';
-import Link from 'next/link';
+
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { resetPassword } from '../utils/yupValidation';
+import { resetPassword } from '../../utils/yupValidation';
 
-import { Button } from '../components/Form/Button';
-import { Input } from '../components/Form/Input';
+import { Button } from '../../components/Form/Button';
+import { Input } from '../../components/Form/Input';
 
 type ResetPasswordParams = {
   password: string;
@@ -70,8 +70,8 @@ export default function ResetPassword() {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {}
-  };
-};
+// export const getStaticProps: GetStaticProps = async () => {
+//   return {
+//     props: {}
+//   };
+// };

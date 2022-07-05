@@ -31,6 +31,7 @@ module.exports = {
       green: colors.green,
       primary: '#034ea1',
       secondary: '#0095db',
+      blueOpacity: 'rgba(0, 149, 219, 0.23)',
       neutral: {
         200: '#F3FAFD',
         300: '#D9EFF9'

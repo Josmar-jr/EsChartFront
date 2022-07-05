@@ -20,6 +20,8 @@ import {
   SignUpCredentials,
   User
 } from './types';
+import { getMe } from '../../services/requests/me';
+import { requestAdminCredentials } from '../../services/requests/adminCredentials';
 
 const AuthContext = createContext({} as AuthContextData);
 
@@ -41,26 +43,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const { 'eschart.token': token } = parseCookies();
 
-    if (token) {
-      api
-        .get('/extensao_ufrn_api/user/3')
-        .then(response => {
-          const {
-            email,
-            name,
-            username,
-            avatar,
-            user_permissions: permissions
-          } = response.data;
+    const getCurrentMe = async () => {
+      const { email, name, username, avatar } = await getMe();
+      setUser({
+        email,
+        name,
+        username,
+        avatar
+      });
 
-          setUser({ email, name, permissions, avatar, username });
-          console.log(user)
-        })
-        .catch(error => {
-          console.error(`Router '/me' with error ${error}`);
-          signOut();
-          // authChannel.close();
-        });
+      return;
+    };
+
+    if (token) {
+      getCurrentMe();
     }
   }, []);
 
@@ -89,34 +85,48 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: '/'
       });
 
-      setUser({
-        email
-      });
-
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       toast.success('Login efetuado com sucesso!', customToast);
+
+      const { name, username, avatar } = await getMe();
+
+      setUser({
+        email,
+        name,
+        username,
+        avatar
+      });
+
       Router.push('/dashboard');
     } catch {
       toast.error('Email ou senha incorretos!', customToast);
     }
   };
 
-  const signUp = async ({
-    name,
-    email,
-    password,
-    confirmPassword,
-    confirmTerms
-  }: SignUpCredentials) => {
-    console.log(
-      'Sign Up',
-      name,
-      email,
-      password,
-      confirmPassword,
-      confirmTerms
-    );
+  const signUp = async ({ name, email, password }: SignUpCredentials) => {
+    try {
+      const { token } = await requestAdminCredentials();
+
+      api.defaults.headers['Authorization'] = `Bearer ${token}`;
+      console.log(name, email, password);
+
+      await api.post('/extensao_ufrn_api/user', {
+        email,
+        name,
+        password
+      });
+
+      toast.success('Usuário criado com sucesso!', customToast);
+      Router.push('/');
+    } catch (error) {
+      if (error.response.status === 400) {
+        toast.error('Já existe um usuário com esse E-mail!', customToast);
+        return;
+      }
+
+      toast.error('Error ao criar o usuário!', customToast);
+    }
   };
 
   return (

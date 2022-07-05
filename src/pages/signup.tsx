@@ -1,8 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import toast, { Toaster } from 'react-hot-toast';
-
 import { Input } from '../components/Form/Input';
 import { withSSRGuest } from '../utils/withSSRGuest';
 import { Button } from '../components/Form/Button';
@@ -14,7 +12,6 @@ export default function SignUp() {
 
   const {
     register,
-    trigger,
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm({
@@ -64,6 +61,7 @@ export default function SignUp() {
               error={errors.email}
               placeholder="Seu E-mail"
               customClass="rounded-lg shadow-sm"
+              autoComplete="off"
               {...register('email')}
             />
           </div>
@@ -83,6 +81,7 @@ export default function SignUp() {
               error={errors.password}
               placeholder="Sua senha"
               customClass="rounded-lg shadow-sm"
+              autoComplete="off"
               {...register('password')}
             />
           </div>

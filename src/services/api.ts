@@ -11,7 +11,7 @@ export function setupApiClient(ctx = undefined) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: `https://extensao-api-ufrn.herokuapp.com/api`,
+    baseURL: 'https://eschart.pythonanywhere.com/api',
     headers: {
       Authorization: `Bearer ${cookies['eschart.token']}`
     }
@@ -23,7 +23,7 @@ export function setupApiClient(ctx = undefined) {
     },
     (error: AxiosError) => {
       if (error.response.status === 401) {
-        if (error.response.data['code'] === 'token.expired') {
+        if (error.response.data['code'] === 'token_not_valid') {
           // renovar token
           cookies = parseCookies(ctx);
 
@@ -34,11 +34,11 @@ export function setupApiClient(ctx = undefined) {
             isRefreshing = true;
 
             api
-              .post('/refresh', {
+              .post('/token/refresh', {
                 refreshToken
               })
               .then(response => {
-                const { token } = response.data;
+                const { access: token } = response.data;
 
                 setCookie(ctx, 'eschart.token', token, {
                   maxAge: 60 * 60 * 24 * 30, // 30 days

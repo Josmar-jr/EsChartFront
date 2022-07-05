@@ -30,7 +30,7 @@ export function Layout({ children }: LayoutProps) {
       <DisclosureProvider>
         <div className="fixed top-0 px-4 left-0 w-full border-b border-gray-300 z-50 bg-neutral-200 dark:bg-slate-900">
           <Header />
-          {/* <SignOutModal /> */}
+          <SignOutModal />
 
           <NavigationMenu />
         </div>
